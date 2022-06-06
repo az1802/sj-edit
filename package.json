@@ -5,12 +5,15 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test": "jest"
   },
   "dependencies": {
     "@types/lodash-es": "^4.17.6",
+    "@types/vue": "^2.0.0",
     "ant-design-vue": "^2.2.8",
     "core-js": "^3.6.5",
+    "jest": "^28.1.0",
     "lodash-es": "^4.17.21",
     "uuid": "^8.3.2",
     "vue": "^3.0.0",

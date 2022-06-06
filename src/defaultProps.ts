@@ -36,6 +36,7 @@ export const textDefaultProps = {
   textAlign: "left",
   color: "#000",
   backgroundColor: "",
+  fontFamily: "'SimSUn','STSong'",
   ...commonDefaultProps,
 };
 

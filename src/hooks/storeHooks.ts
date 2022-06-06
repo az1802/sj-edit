@@ -5,7 +5,7 @@
  * @LastEditTime: 2022-02-17 10:39:49
  * @FilePath: /new-fanpiao-uniapp/src/utils/hooks/storeHooks.js
  */
-import { computed, ComputedGetter } from "vue";
+import { computed, ComputedGetter, ComputedRef } from "vue";
 import {
   mapGetters,
   mapState,
@@ -15,29 +15,26 @@ import {
   mapActions,
 } from "vuex";
 
-const cacheStore: Record<string, any> = {};
+const moduleMapFn: Record<string, ComputedRef<any>> = {};
+const cacheStore: Record<string, typeof moduleMapFn> = {};
 
 const useMapper = (
   mapper: string[],
   mapFn: Function,
   moduleName: string,
   useComputed = false
-): Record<string, ComputedGetter<any>> | any => {
-  if (!cacheStore[moduleName]) {
-    cacheStore[moduleName] = {};
-  }
+): Record<string, ComputedRef<any>> | any => {
+  // if (!cacheStore[moduleName]) {
+  //   cacheStore[moduleName] = {};
+  // }
   const store = useStore();
   const storeStateFns = mapFn(mapper);
-  const storeState: Record<string, Function> = {};
+  const storeState: Record<string, ComputedRef<any>> = {};
   Object.keys(storeStateFns).forEach((keyFn) => {
-    let fn;
-    if (cacheStore[moduleName][keyFn] && 0) {
-      storeState[keyFn] = cacheStore[moduleName][keyFn];
-    } else {
-      fn = storeStateFns[keyFn].bind({ $store: store });
-      storeState[keyFn] = (useComputed && computed(fn)) || fn;
-      cacheStore[moduleName][keyFn] = storeState[keyFn];
-    }
+    const fn = storeStateFns[keyFn].bind({ $store: store });
+    storeState[keyFn] = useComputed ? computed(fn) : fn;
+
+    // cacheStore[moduleName][keyFn] = storeState[keyFn];
   });
   return storeState;
 };
@@ -45,7 +42,7 @@ const useMapper = (
 export function useState(
   moduleName: string | string[],
   mapper?: string[]
-): Record<string, ComputedGetter<any>> {
+): Record<string, ComputedRef<any>> {
   let mapperFn = mapState;
 
   if (Array.isArray(moduleName)) {
@@ -96,7 +93,7 @@ export function useMutations(
     return {};
   }
 
-  return useMapper(mapper, mapperFn, moduleName, true);
+  return useMapper(mapper, mapperFn, moduleName);
 }
 
 export function useActions(
@@ -115,5 +112,5 @@ export function useActions(
     return {};
   }
 
-  return useMapper(mapper, mapperFn, moduleName, true);
+  return useMapper(mapper, mapperFn, moduleName);
 }

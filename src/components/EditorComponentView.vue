@@ -5,6 +5,7 @@
       @click="selComponent(componentItem)"
       v-for="componentItem in components"
       :key="componentItem.id"
+      :class="[componentItem.id === currentElementId ? 'active' : '']"
     >
       <component :is="componentItem.name" v-bind="componentItem.props">
       </component>
@@ -12,24 +13,16 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from "vue";
-import { useStore, createNamespacedHelpers } from "vuex";
-import { ComponentData } from "@/store/editor";
-import { useEditorComponent } from "@hooks/useEditorComponent";
+import { defineComponent } from "vue";
+import { useEditorComponent } from "@/hooks/useEditorComponent";
 export default defineComponent({
   components: {},
   setup() {
-    const store = useStore();
-    console.log("store: ", store);
+    const { components, selComponent, currentElementId } = useEditorComponent();
 
-    const components = computed(() => store.state.editor.components);
-    const currentElement = computed(() => store.state.editor.currentElement);
-    const selComponent = (componentItem: ComponentData) => {
-      store.commit("editor/setCurrentElement", componentItem.id);
-    };
     return {
+      currentElementId,
       components,
-      currentElement,
       selComponent,
     };
   },
@@ -43,6 +36,9 @@ export default defineComponent({
   background: white;
   position: relative;
   .component-wrapper {
+    &.active {
+      border: 1px solid blue;
+    }
   }
 }
 </style>

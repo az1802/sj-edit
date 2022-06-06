@@ -51,7 +51,7 @@ export default defineComponent({
     }
   }
   .props-list {
-    background: yellow;
+    background: #ccc;
   }
 }
 </style>

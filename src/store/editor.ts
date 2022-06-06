@@ -21,7 +21,15 @@ const testComponents: ComponentData[] = [
   {
     id: uuidv4(),
     name: "l-text",
-    props: { text: "hello1", fontSize: "22px", color: "red", height: "60px" },
+    props: {
+      text: "hello1",
+      fontSize: "22px",
+      color: "red",
+      height: "60px",
+      lineHeight: 1.5,
+      textAlign: "center",
+      fontFamily: "'SimSun','STSong'",
+    },
   },
   { id: uuidv4(), name: "l-text", props: { text: "hello2", right: "0px" } },
   {
@@ -44,7 +52,9 @@ const editor: Module<EditorProps, GlobalDataProps> = {
   },
   getters: {
     currentElement(state) {
-      return find(state.components, (o) => o.id === state.currentElementId);
+      return (
+        find(state.components, (o) => o.id === state.currentElementId) || false
+      );
     },
   },
   mutations: {
@@ -58,6 +68,15 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     setCurrentElement(state, id: string) {
       console.log("id: ", id);
       state.currentElementId = id;
+    },
+    updateComponent(state, { key, value }) {
+      const currentElement = find(
+        state.components,
+        (o) => o.id === state.currentElementId
+      );
+      if (currentElement) {
+        currentElement.props[key as keyof TextComponentProps] = value;
+      }
     },
   },
   actions: {},

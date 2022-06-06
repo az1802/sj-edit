@@ -1,18 +1,28 @@
 <template>
-  <div>{{ currentComponent }}</div>
+  <div class="" v-if="currentElement">
+    <div>{{ currentElement.name }}</div>
+    <PropsTables :props="currentElement.props" @change="handleChange" />
+  </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from "vue";
-import { useStore, mapGetters } from "vuex";
+import { defineComponent } from "vue";
+import PropsTables from "./PropsTable.vue";
+import { useEditorComponent } from "@/hooks/useEditorComponent";
 export default defineComponent({
-  components: {},
+  components: {
+    PropsTables,
+  },
   setup() {
-    const store = useStore();
-    const currentComponent = computed(
-      () => store.getters["editor/currentElement"]
-    );
+    const { currentElement, updateComponent } = useEditorComponent();
+    console.log("currentElement: ", currentElement);
+
+    const handleChange = (e: any) => {
+      updateComponent(e);
+      console.log("rests: ", e);
+    };
     return {
-      currentComponent,
+      currentElement,
+      handleChange,
     };
   },
 });
