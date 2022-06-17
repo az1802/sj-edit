@@ -1,4 +1,4 @@
-import { TextComponentProps } from "./../defaultProps";
+import { TextComponentProps } from "../defaultProps";
 import { Module } from "vuex";
 import { v4 as uuidv4 } from "uuid";
 import { GlobalDataProps } from "./index";
@@ -53,7 +53,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
   getters: {
     currentElement(state) {
       return (
-        find(state.components, (o) => o.id === state.currentElementId) || false
+        find(state.components, (o:ComponentData) => o.id === state.currentElementId) || false
       );
     },
   },
@@ -72,7 +72,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     updateComponent(state, { key, value }) {
       const currentElement = find(
         state.components,
-        (o) => o.id === state.currentElementId
+        (o:ComponentData) => o.id === state.currentElementId
       );
       if (currentElement) {
         currentElement.props[key as keyof TextComponentProps] = value;
