@@ -4,11 +4,7 @@
       <slot v-if="fileStatus == 'loading'" name="loading">
         <button class="btn btn-primary" disabled>正在上传</button>
       </slot>
-      <slot
-        v-if="fileStatus == 'success'"
-        name="success"
-        :uploadData="uploadData"
-      >
+      <slot v-if="fileStatus == 'success'" name="success" :uploadData="uploadData">
         <button class="btn btn-primary">上传成功</button>
       </slot>
       <slot v-if="fileStatus == 'error'" name="error">
@@ -28,38 +24,33 @@
   </div>
 </template>
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  reactive,
-  PropType,
-  onBeforeMount,
-  onMounted,
-} from "vue";
-import { sleep } from "@utils";
-import axios from "axios";
-type uploadStatus = "ready" | "loading" | "success" | "error";
+import { defineComponent, ref, Ref, onMounted } from 'vue';
+import { sleep } from '@/utils';
+import axios from 'axios';
+type uploadStatus = 'ready' | 'loading' | 'success' | 'error';
 axios
   .post(
-    "http://192.168.0.103:3002/tests/upload",
+    'http://192.168.0.103:3002/tests/upload',
     {},
     {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
       auth: {
-        username: "sunjie",
-        password: "aaa",
+        username: 'sunjie',
+        password: 'aaa',
       },
     }
   )
   .then((res) => console.log(res));
+const a: Ref<number> = ref(1);
+console.log('a: ', a);
 
 console.log(
-  "http---",
+  'http---',
   axios.create({
     headers: {
-      sunjie: "aa",
+      sunjie: 'aa',
     },
   })
 );
@@ -71,11 +62,10 @@ export default defineComponent({
       required: true,
     },
     beforeUpload: {
-      type: Function as PropType<CheckFunction>,
+      type: Function,
     },
     uploaded: {
-      type: Boolean,
-      default: false,
+      type: Object,
     },
     multiple: {
       type: Boolean,
@@ -83,49 +73,49 @@ export default defineComponent({
     },
   },
   inheritAttrs: false,
-  setup(props, { emit }) {
+  setup(props) {
     const fileInput = ref<null | HTMLInputElement>(null);
-    const fileStatus = ref<uploadStatus>(props.uploaded ? "success" : "ready");
-    const uploadData = ref(null);
+    const fileStatus = ref<uploadStatus>(props.uploaded ? 'success' : 'ready');
+    const uploadData = ref(props.uploaded);
     onMounted(() => {
       console.log(fileInput.value);
     });
-    async function handleFileChange(e) {
-      const currentTarget = e.target;
-      const files = currentTarget.files;
-      if (!files[0]) {
-        return;
+    async function handleFileChange(e: Event) {
+      const currentTarget = e.target as HTMLInputElement;
+
+      if (currentTarget.files) {
+        const files = Array.from(currentTarget.files);
+        fileStatus.value = 'loading';
+        const formData = new FormData();
+        try {
+          uploadData.value = files[0];
+          formData.append('files', files[0]);
+          const res = await axios.post(
+            'http://192.168.0.103:3002/tests/upload',
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+              auth: {
+                username: 'sunjie',
+                password: 'aaa',
+              },
+            }
+          );
+          console.log('res: ', res);
+          await sleep(2000); //上传文件
+          fileStatus.value = 'success';
+        } catch (ex) {
+          console.log('ex: ', ex);
+          fileStatus.value = 'error';
+        }
+        console.log(formData);
       }
-      const formData = new FormData();
-      fileStatus.value = "loading";
-      try {
-        uploadData.value = files;
-        formData.append("files", files);
-        const res = await axios.post(
-          "http://192.168.0.103:3002/tests/upload",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            auth: {
-              name: "sunjie",
-              password: "aaa",
-            },
-          }
-        );
-        console.log("res: ", res);
-        await sleep(2000); //上传文件
-        fileStatus.value = "success";
-      } catch (ex) {
-        console.log("ex: ", ex);
-        fileStatus.value = "error";
-      }
-      console.log(formData);
     }
     function triggerUpload() {
       // fileInput.value
-      if (fileStatus.value == "loading") {
+      if (fileStatus.value == 'loading') {
         return;
       }
       fileInput.value && fileInput.value.click();

@@ -36,7 +36,7 @@ interface FormProps {
   text?: string;
   extraProps?: { [key: string]: any };
   options?: { text: string | VNode; value: any }[];
-  valueProp?: string;
+  valueProp: string;
   eventName: string;
   value: string;
   events: {

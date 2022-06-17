@@ -11,14 +11,16 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
-import { defaultTextTemplates } from "../defaultTemplates";
+import { defineComponent, ref, Ref } from 'vue';
+import { defaultTextTemplates, TemplateItem } from '../defaultTemplates';
 export default defineComponent({
-  emits: ["on-item-click"],
+  emits: ['on-item-click'],
   setup(props, { emit }) {
-    const onItemClick = (data: any) => {
-      emit("on-item-click", data);
+    const onItemClick = (data: TemplateItem) => {
+      emit('on-item-click', data);
     };
+    const a: Ref<number> = ref(1);
+    console.log('a: ', a);
     return {
       defaultTextTemplates,
       onItemClick,
@@ -26,5 +28,4 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>

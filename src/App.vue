@@ -15,9 +15,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
-import { useRoute } from "vue-router";
-import Header from "./components/Header.vue";
+import { defineComponent, computed } from 'vue';
+import { useRoute } from 'vue-router';
+import Header from './components/Header.vue';
 
 export default defineComponent({
   components: {
@@ -28,7 +28,6 @@ export default defineComponent({
     const withHeader = computed(() => {
       return !!route.meta.withHeader;
     });
-
     return {
       withHeader,
     };

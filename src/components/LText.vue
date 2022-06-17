@@ -4,23 +4,20 @@
   >
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 import {
   transformToComponentProps,
   textDefaultProps,
   textStylePropName,
-} from "../defaultProps";
+} from '../defaultProps';
 const defaultProps = transformToComponentProps(textDefaultProps);
-import { useComponentCommon } from "../hooks/useComponentCommon";
+import { useComponentCommon } from '../hooks/useComponentCommon';
 export default defineComponent({
-  name: "l-text",
+  name: 'l-text',
   components: {},
   props: defaultProps,
   setup(props) {
-    const { styleProps, handleCLick } = useComponentCommon(
-      props,
-      textStylePropName
-    );
+    const { styleProps, handleCLick } = useComponentCommon(props, textStylePropName);
     return {
       styleProps,
       handleCLick,
@@ -28,5 +25,4 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>
